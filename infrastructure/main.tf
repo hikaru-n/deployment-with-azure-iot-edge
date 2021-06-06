@@ -14,31 +14,27 @@ provider "azurerm" {
 
 # resource group
 resource "azurerm_resource_group" "iot" {
-  name     = "StudyAnalyticsMTG"
-  location = "japaneast"
+  name     = var.resource_group_name
+  location = var.location
 
-  tags = {
-    Name = "Analytics"
-  }
 }
 
 # container registry
 resource "azurerm_container_registry" "iot" {
-  name                = "AnalyticsMTGRegistry"
-  resource_group_name = azurerm_resource_group.iot.name
-  location            = azurerm_resource_group.iot.location
+  name                = var.container_registry_name
+  resource_group_name = var.resource_group_name
+  location            = var.location
   sku                 = "Basic"
   admin_enabled       = true
 }
 
 # azure iot hub 
 resource "azurerm_iothub" "iot" {
-  name                = "StudyMTGAnalyticsIoTHub"
-  resource_group_name = azurerm_resource_group.iot.name
-  location            = azurerm_resource_group.iot.location
+  name                = var.iothub_name
+  resource_group_name = var.resource_group_name
+  location            = var.location
 
   file_upload {
-    default_ttl        = "PT1H"
     container_name     = ""
     connection_string  = ""
     lock_duration      = "PT1M"

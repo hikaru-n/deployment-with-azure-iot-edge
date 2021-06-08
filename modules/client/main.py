@@ -1,39 +1,40 @@
-import json
-import time
+from threading import Thread
+from queue import Queue
+
 import cv2
-import requests
 
 
-class VideoStream:
+class Camera(Thread):
 
-    def __init__(self, video_path):
-        self.video_path = video_path
+    def __init__(self, index, bucket):
+        super().__init__()
+        self.stream = cv2.VideoCapture(index)
+        self.bucket = bucket
 
-    def capture(self):
-        return self.vstream.read()
+    def run(self):
+        while True:
+            data = self.stream.read()
+            self.bucket.put(data)
 
-    def __enter__(self):
-        self.vstream = cv2.VideoCapture(self.video_path)
-        return self.vstream
-
-    def __exit__(self, *args):
-        self.vstream.release()
+    def get_data(self):
+        return self.bucket.get()
 
 
-class ImageCurlClient:
+class Client:
+    def __init__(self, camera=None, buffersize=3):
+        self.bucket = Queue(buffersize)
+        if camera is None:
+            camera = Camera(index=0, bucket=self.bucket)
+        self.camera = camera
 
-    def __init__(self,endpoint=''):
-        self.endpoint = endpoint
+    def run(self):
+        self.camera.start()
 
-    @staticmethod
-    def send_img(self, img):
-        headers = {'Content-Type': 'application/octet-stream'}
-        try:
-            response = requests.post(
-                self.endpoint, params=self.preprocess_params, data=img)
 
-        except Exception as e:
-            print("send_img Exception -" + str(e))
-            return "[]"
+def main():
+    client = Client()
+    client.run()
 
-        return json.dumps(response.json())
+
+if __name__ == "__main__":
+    main()

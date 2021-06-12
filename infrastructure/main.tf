@@ -34,13 +34,11 @@ resource "azurerm_iothub" "iot" {
   resource_group_name = var.resource_group_name
   location            = var.location
 
-  file_upload {
-    container_name     = ""
-    connection_string  = ""
-    lock_duration      = "PT1M"
-    max_delivery_count = 10
-    notifications      = false
-    sas_ttl            = "PT1H"
+  fallback_route {
+    source = "DeviceMessages"
+    condition = true
+    endpoint_names  = ["events"]
+    enabled = true
   }
 
   sku {

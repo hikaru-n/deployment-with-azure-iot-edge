@@ -1,4 +1,3 @@
-import datetime
 import os
 from typing import Dict
 
@@ -32,12 +31,12 @@ class IoTHub(Thread):
             raise ValueError
 
     def _format_message(self, message):
+        self._check_message_include_estimater_results(message)
         return "{}"
 
     def _send(self):
         if self.messages.not_empty():
             message = self.messages.get()
-            self._check_message_include_estimater_results(message)
             message = self._format_message(message)
             self._device_client.send_message(message)
 

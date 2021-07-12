@@ -1,26 +1,30 @@
-import os
-import pathlib
-from flask import Flask
 import pytest
-from app import predcit
+import torchvision.transforms as FT
+from src.models import Model
+
+from . import get_image
 
 
-def get_url():
-    host = os.environ.get("APP_HOST", "localhost")
-    if host == "localhost":
-        return f"http://{host}:5000"
-    return f"http://{host}:80"
-
-
-@pytest.fixture
-def url():
-    return get_url()
-
-
-def get_api():
-    app = Flask(__name__, instance_relative_config=True)
+def _get_transformer():
+    return FT.Compose(
+        [
+            FT.Resize((224, 224)),
+            FT.ToTensor(),
+        ]
+    )
 
 
 @pytest.fixture
-def restart_api():
-    pathlib.Path(APP_SOURCE).touch()
+def _transformer():
+    return _get_transformer()
+
+
+@pytest.fixture
+def input(_transformer):
+    input = _transformer(get_image("cat.jpg"))
+    return input.unsqueeze(0).double()
+
+
+@pytest.fixture
+def model():
+    return Model("resnet18")

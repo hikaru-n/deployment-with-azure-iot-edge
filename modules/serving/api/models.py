@@ -15,12 +15,15 @@ def inference(name):
     class_name = "mikan"
     label = 0
     prob = 0.5
-    return jsonify(
-        {
-            "eta (s)": eta,
-            "model": model_name,
-            "label": label,
-            "class_name": class_name,
-            "prob": prob
-        }
-    ), 201
+    return (
+        jsonify(
+            {
+                "eta (s)": eta,
+                "model": model_name,
+                "label": label,
+                "class_name": class_name,
+                "prob": prob,
+            }
+        ),
+        201,
+    )

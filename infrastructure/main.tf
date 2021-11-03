@@ -28,7 +28,7 @@ resource "azurerm_container_registry" "iot" {
   admin_enabled       = true
 }
 
-# azure iot hub 
+# azure iot hub
 resource "azurerm_iothub" "iot" {
   name                = var.iothub_name
   resource_group_name = var.resource_group_name

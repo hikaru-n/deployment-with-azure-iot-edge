@@ -10,7 +10,7 @@ def test_get_model(name):
 
 
 @pytest.mark.parametrize("name", ["unknown", "miss"])
-def test_get_model_raise_given_unavailable_model_name(name):
+def test_get_model_raise_when_model_name_is_unavailable(name):
     with pytest.raises(ValueError):
         Model(name)
 

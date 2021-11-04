@@ -1,5 +1,10 @@
+import os
+
 import pytest
+import requests
 import torchvision.transforms as FT
+from tenacity import retry, stop_after_delay
+
 from src.models import Model
 
 from . import get_image
@@ -12,6 +17,20 @@ def _get_transformer():
             FT.ToTensor(),
         ]
     )
+
+
+def get_api_url():
+    host = os.environ.get("API_HOST", "localhost")
+    if host == "localhost":
+        port = 5000
+    else:
+        port = 80
+    return f"http://{host}:{port}"
+
+
+@retry(stop=stop_after_delay(10))
+def wait_for_webapp_to_come_up():
+    return requests.get(get_api_url())
 
 
 @pytest.fixture
@@ -28,3 +47,8 @@ def input(_transformer):
 @pytest.fixture
 def model():
     return Model("resnet18")
+
+
+@pytest.fixture
+def restart_api():
+    ...

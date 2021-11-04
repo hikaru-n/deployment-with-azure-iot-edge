@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(
-    name="allocation",
+    name="iotclient",
     version="0.1",
     packages=["iotclient"],
 )

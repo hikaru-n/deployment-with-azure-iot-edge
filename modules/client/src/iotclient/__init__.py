@@ -1,17 +1,16 @@
-from queue import Queue
-
-from iotclient.camera import Camera
-from iotclient.iothub import IoTHub
+import os
 
 
-class Client:
-    def __init__(self, buffersize=3):
-        self.images = Queue(buffersize)
-        self.camera = Camera(images=self.images)
+def get_azure_connection_string():
+    if value := os.environ.get("CONNECTION_STRING", None) is None:
+        raise RuntimeError("Environ name CONNECTION_STRING must be set.")
+    return value
 
-        self.messages = Queue(buffersize)
-        self.iothub = IoTHub(messages=self.messages)
 
-    def run(self):
-        self.camera.start()
-        self.iothub.start()
+def get_api_url():
+    host = os.environ.get("API_HOST", "localhost")
+    if host == "localhost":
+        port = 5000
+    else:
+        port = 80
+    return f"http://{host}:{port}"

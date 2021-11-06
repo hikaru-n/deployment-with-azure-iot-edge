@@ -1,8 +1,9 @@
-import os
 from typing import Dict
 from threading import Thread
 
 from azure.iot.device import IoTHubDeviceClient, Message
+
+from iotclient import get_azure_connection_string
 
 
 class IoTHub(Thread):
@@ -12,10 +13,8 @@ class IoTHub(Thread):
         self._device_client = self._get_device_client()
 
     def _get_device_client(self):
-        con_str = os.environ.get("CONNECTION_STRING", "")
-        if not con_str:
-            raise RuntimeError("Environ name CONNECTION_STRING must be set.")
-        return IoTHubDeviceClient.create_from_connection_string(con_str)
+        value = get_azure_connection_string()
+        return IoTHubDeviceClient.create_from_connection_string(value)
 
     def _check_message_include_estimater_results(self, message):
         if not isinstance(message, Dict):

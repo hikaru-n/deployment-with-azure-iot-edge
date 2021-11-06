@@ -6,6 +6,10 @@ from azure.iot.device import IoTHubDeviceClient, Message
 from iotclient import get_azure_connection_string
 
 
+class EmptyMessage(Exception):
+    """Raise when message has no data."""
+
+
 class IoTHub(Thread):
     def __init__(self, messages):
         super().__init__()
@@ -27,12 +31,16 @@ class IoTHub(Thread):
             raise ValueError
 
     def _send(self):
-        if not self.messages.empty():
-            data = self.messages.get()
-            self._check_message_include_estimater_results(data)
-            message = Message(str(data))
-            self._device_client.send_message(message)
+        if self.messages.empty():
+            raise EmptyMessage
+        data = self.messages.get()
+        self._check_message_include_estimater_results(data)
+        message = Message(str(data))
+        self._device_client.send_message(message)
 
     def run(self):
         while True:
-            self._send()
+            try:
+                self._send()
+            except EmptyMessage:
+                pass

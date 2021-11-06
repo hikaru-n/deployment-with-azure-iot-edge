@@ -1,16 +1,12 @@
-import torchvision.models.resnet as resnet
+import torch
+from models import get_model
 
 
-def get_model(name, *args, **kwargs):
-    if name == "resnet18":
-        return resnet.resnet18(*args, **kwargs).double()
-    elif name == "resnet34":
-        return resnet.resnet34(*args, **kwargs).double()
-    elif name == "resnet50":
-        return resnet.resnet50(*args, **kwargs).double()
-    elif name == "resnet101":
-        return resnet.resnet101(*args, **kwargs).double()
-    elif name == "resnet152":
-        return resnet.resnet152(*args, **kwargs).double()
-    else:
-        raise ValueError()
+class Model(torch.nn.Module):
+    def __init__(self, name):
+        super().__init__()
+        self._model = get_model(name)
+
+    @torch.no_grad()
+    def predict(self, input):
+        return self._model(input)

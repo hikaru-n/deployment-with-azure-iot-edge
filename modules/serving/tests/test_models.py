@@ -1,20 +1,25 @@
 import pytest
-from src.models import Model
+
+import torch
+
+from iotserving.models import Model
 
 
 @pytest.mark.parametrize(
     "name", ["resnet18", "resnet34", "resnet50", "resnet101", "resnet152"]
 )
-def test_get_model(name):
+def test_can_get_model(name):
     Model(name)
 
 
-@pytest.mark.parametrize("name", ["unknown", "miss"])
-def test_get_model_raise_when_model_name_is_unavailable(name):
+@pytest.mark.parametrize("name", ["unknown", None])
+def test_cannot_get_model_if_model_name_is_unavailable(name):
     with pytest.raises(ValueError):
         Model(name)
 
 
+@pytest.mark.usefixtures("detaministic")
 def test_model_predict(input, model):
-    result = model.predict(input)
-    print(result.numpy().mean())
+    actual = model.predict(input).mean()
+    expected = torch.tensor(0.016663464987351616)
+    torch.testing.assert_allclose(actual, expected)

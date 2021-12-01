@@ -8,14 +8,18 @@ from iotserving.models import Input
 app = Flask(__name__)
 
 
-@app.route("/models/<string:name>/predict", methods=["POST"])
-def predict(name):
-    model = Model(name)
+def _get_input():
     param = json.loads(request.json)
     input = Input.from_post_parameter(param)
     transformer = transforms.Transformer()
     input = transformer(input)
-    input = input.to_minibatch()
+    return input.to_minibatch()
+
+
+@app.route("/models/<string:name>/predict", methods=["POST"])
+def predict(name):
+    model = Model(name)
+    input = _get_input()
     result = model.forward(input.data)
-    print(result.argmax(axis=1))
-    return {"model": ""}
+    result = result.argmax(axis=1).item()
+    return {"model": result}

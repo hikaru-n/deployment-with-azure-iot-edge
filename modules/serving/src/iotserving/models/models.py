@@ -1,8 +1,5 @@
 import torch
 import torchvision.models.resnet as resnet
-from flask import Blueprint
-
-api = Blueprint("models", __name__, url_prefix="/models")
 
 
 def _get_model(name, *args, **kwargs):

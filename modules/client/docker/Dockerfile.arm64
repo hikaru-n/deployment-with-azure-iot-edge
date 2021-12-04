@@ -23,7 +23,6 @@ RUN apt-get -qq update \
         v4l2ucp
 
 WORKDIR /opt/build
-
 RUN pip install numpy \
     && wget -q https://github.com/opencv/opencv/archive/${OPENCV_VERSION}.zip -O opencv.zip \
     && unzip -qq opencv.zip -d /opt \
@@ -53,6 +52,8 @@ RUN pip install numpy \
 
 WORKDIR /app
 
-COPY . .
+RUN requirements.txt .
+RUN pip install -r requirements.txt
 
-# ENTRYPOINT [ "python" ]
+COPY . .
+RUN pip install -e .

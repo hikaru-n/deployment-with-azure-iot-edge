@@ -4,12 +4,12 @@ services:
 
   serving:
     build:
-      context: serving
+      context: modules/serving
       dockerfile: docker/Dockerfile.amd64
-    image: serving
+    image: iotserving
 
   api:
-    image: serving
+    image: iotserving
     depends_on:
       - serving
     environment:
@@ -25,3 +25,9 @@ services:
       - --port=80
     ports:
       - "5005:80"
+
+  client:
+    build:
+      context: modules/client
+      dockerfile: docker/Dockerfile.amd64
+    image: iotclient

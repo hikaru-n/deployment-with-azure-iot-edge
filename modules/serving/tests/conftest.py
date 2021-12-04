@@ -24,7 +24,7 @@ def transformer():
 @pytest.fixture
 def input(transformer):
     input = transformer(get_image("cat.jpg"))
-    return input.unsqueeze(0).double()
+    return input.unsqueeze(0)
 
 
 @pytest.fixture

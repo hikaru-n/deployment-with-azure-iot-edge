@@ -22,7 +22,6 @@ RUN apt-get -qq update \
         libpq-dev
 
 WORKDIR /opt/build
-
 RUN pip install numpy \
     && wget -q https://github.com/opencv/opencv/archive/${OPENCV_VERSION}.zip -O opencv.zip \
     && unzip -qq opencv.zip -d /opt \
@@ -55,7 +54,8 @@ RUN pip install numpy \
 
 WORKDIR /app
 
-COPY . .
-
+RUN requirements.txt .
 RUN pip install -r requirements.txt
+
+COPY . .
 RUN pip install -e .

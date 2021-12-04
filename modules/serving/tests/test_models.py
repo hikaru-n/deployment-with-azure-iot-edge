@@ -20,6 +20,6 @@ def test_cannot_get_model_if_model_name_is_unavailable(name):
 
 @pytest.mark.usefixtures("detaministic")
 def test_model_predict(input, model):
-    actual = model.predict(input).mean()
-    expected = torch.tensor(0.016663464987351616)
+    actual = model(input).mean()
+    expected = torch.tensor(2.4057388145592995e-05)
     torch.testing.assert_allclose(actual, expected)

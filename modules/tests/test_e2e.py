@@ -1,9 +1,24 @@
-from iotclient import get_api_url
-import requests
+import pytest
+from iotclient.clients.client import Client
+
+from . import get_image
 
 
-def test(payload):
-    url = get_api_url()
-    model_name = "resnet18"
-    data = requests.post(f"{url}/models/{model_name}/predict", json=payload)
-    print(data.text)
+class _FakeVideoCapture:
+    def __init__(self, *args, **kwags):
+        pass
+
+    def read(self):
+        return get_image("cat.jpg")
+
+
+@pytest.fixture
+def use_fake_camera_capture(mocker):
+    mocker.patch("cv2.VideoCapture", _FakeVideoCapture)
+
+
+@pytest.mark.usefixtures("use_fake_camera_capture")
+def test():
+    client = Client()
+    client.run()
+    client.shutdown()

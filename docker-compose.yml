@@ -13,7 +13,6 @@ services:
     depends_on:
       - serving
     environment:
-      - API_HOST=api
       - PYTHONDONTWRITEBYTECODE=1
       - FLASK_APP=entrypoints/app.py
       - FLASK_DEBUG=1
@@ -30,4 +29,8 @@ services:
     build:
       context: modules/client
       dockerfile: docker/Dockerfile.amd64
+    volumes:
+      - ./modules/tests:/app/tests
+    environment:
+      - API_HOST=api
     image: iotclient

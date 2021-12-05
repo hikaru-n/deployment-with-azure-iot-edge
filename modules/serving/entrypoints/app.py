@@ -22,4 +22,4 @@ def predict(name):
     input = _get_input()
     result = model.forward(input.data)
     result = result.argmax(axis=1).item()
-    return {"model": result}
+    return {"Prediction": result}

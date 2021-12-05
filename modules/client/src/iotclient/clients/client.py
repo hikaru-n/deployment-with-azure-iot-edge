@@ -21,3 +21,4 @@ class Client:
     def shutdown(self):
         self.camera.kill()
         self.api.kill()
+        self.iothub.kill()

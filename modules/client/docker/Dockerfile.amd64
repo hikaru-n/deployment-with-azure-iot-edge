@@ -19,6 +19,7 @@ RUN apt-get -qq update \
         libtiff-dev \
         libopenjp2-7-dev \
         libavformat-dev \
+        libgl1-mesa-dev \
         libpq-dev
 
 WORKDIR /opt/build

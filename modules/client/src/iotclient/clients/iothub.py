@@ -1,4 +1,3 @@
-from typing import Dict
 from threading import Thread
 
 from azure.iot.device import IoTHubDeviceClient, Message
@@ -10,36 +9,30 @@ class EmptyMessage(Exception):
     """Raise when message has no data."""
 
 
+def _get_device_client():
+    value = get_azure_connection_string()
+    return IoTHubDeviceClient.create_from_connection_string(value)
+
+
 class IoTHub(Thread):
-    def __init__(self, messages):
+    def __init__(self, responses):
         super().__init__()
-        self.messages = messages
-        self._device_client = self._get_device_client()
+        self.responses = responses
+        self._impl = _get_device_client()
+        self._alive = True
 
-    def _get_device_client(self):
-        value = get_azure_connection_string()
-        return IoTHubDeviceClient.create_from_connection_string(value)
-
-    def _check_message_include_estimater_results(self, message):
-        if not isinstance(message, Dict):
-            raise TypeError
-
-        if message.get("Prediction", None) is None:
-            raise ValueError
-
-        if message.get("ElapsedTime", None) is None:
-            raise ValueError
+    def kill(self):
+        self._alive = False
 
     def _send(self):
-        if self.messages.empty():
+        if self.responses.empty():
             raise EmptyMessage
-        data = self.messages.get()
-        self._check_message_include_estimater_results(data)
+        data = self.responses.get()
         message = Message(str(data))
-        self._device_client.send_message(message)
+        self._impl.send_message(message)
 
     def run(self):
-        while True:
+        while self._alive:
             try:
                 self._send()
             except EmptyMessage:

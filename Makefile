@@ -15,8 +15,8 @@ serving-test:
 
 unit-test: client-test serving-test
 
-# integration-tests: up
-# 	docker-compose run --rm --no-deps --entrypoint=pytest api /tests/e2e
+integration-test: up
+	docker-compose run --rm --no-deps --entrypoint=pytest client -s /app/tests
 
 test: unit-test integration-tests
 

@@ -4,17 +4,26 @@ from threading import Thread
 import cv2
 
 
+def _get_video_capture():
+    index = os.environ.get("CAMERA_INDEX", 0)
+    return cv2.VideoCapture(index)
+
+
 class Camera(Thread):
     def __init__(self, images):
         super().__init__()
         self._images = images
-        self._video_capture = self._get_video_capture()
+        self._impl = _get_video_capture()
+        self._alive = True
 
-    def _get_video_capture(self):
-        index = os.environ.get("CAMERA_INDEX", 0)
-        return cv2.VideoCapture(index)
+    def kill(self):
+        self._images.queue.clear()
+        self._alive = False
+
+    def _run(self):
+        image = self._impl.read()
+        self._images.put(image)
 
     def run(self):
-        while True:
-            data = self._video_capture.read()
-            self.images.put(data)
+        while self._alive:
+            self._run()

@@ -2,7 +2,8 @@ import os
 
 
 def get_azure_connection_string():
-    if value := os.environ.get("AZURE_CONNECTION_STRING", None) is None:
+    value = os.environ.get("CONNECTION_STRING")
+    if value is None:
         raise RuntimeError("Environ name CONNECTION_STRING must be set.")
     return value
 

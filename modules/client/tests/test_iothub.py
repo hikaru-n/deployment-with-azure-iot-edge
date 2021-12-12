@@ -36,7 +36,7 @@ class _FakeIoTHubDeviceClient:
 
 def _nullify_device_client(mocker):
     def null(*args):
-        _FakeIoTHubDeviceClient
+        return _FakeIoTHubDeviceClient
 
     mocker.patch("iotclient.clients.iothub._get_device_client", null)
 

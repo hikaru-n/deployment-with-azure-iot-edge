@@ -22,14 +22,15 @@ class IoTHub(Thread):
         self._alive = True
 
     def kill(self):
+        if not self.responses.empty:
+            self.responses.clear()
         self._alive = False
 
     def _send(self):
         if self.responses.empty():
             raise EmptyMessage
         data = self.responses.get()
-        message = Message(str(data))
-        self._impl.send_message(message)
+        self._impl.send_message(Message(str(data)))
 
     def run(self):
         while self._alive:

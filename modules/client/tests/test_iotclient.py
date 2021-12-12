@@ -10,13 +10,13 @@ def _overwrite_environment_value(mocker, name, value=None):
 
 
 def test_cannot_get_connection_string_if_unnset_environment_value(mocker):
-    _overwrite_environment_value(mocker, "AZURE_CONNECTION_STRING")
+    _overwrite_environment_value(mocker, "CONNECTION_STRING")
     with pytest.raises(RuntimeError):
         get_azure_connection_string()
 
 
 def test_can_get_connection_string(mocker):
-    _overwrite_environment_value(mocker, "AZURE_CONNECTION_STRING", "authorized")
+    _overwrite_environment_value(mocker, "CONNECTION_STRING", "authorized")
     get_azure_connection_string()
 
 

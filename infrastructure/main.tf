@@ -26,23 +26,26 @@ resource "azurerm_container_registry" "iot" {
   location            = var.location
   sku                 = "Basic"
   admin_enabled       = true
+  depends_on          = [azurerm_resource_group.iot]
 }
 
-# azure iot hub 
+# azure iot hub
 resource "azurerm_iothub" "iot" {
   name                = var.iothub_name
   resource_group_name = var.resource_group_name
   location            = var.location
+  depends_on          = [azurerm_resource_group.iot]
 
   fallback_route {
-    source = "DeviceMessages"
-    condition = true
-    endpoint_names  = ["events"]
-    enabled = true
+    source         = "DeviceMessages"
+    condition      = true
+    endpoint_names = ["events"]
+    enabled        = true
   }
 
   sku {
     name     = "S1"
     capacity = "1"
   }
+
 }

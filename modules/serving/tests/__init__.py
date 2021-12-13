@@ -5,7 +5,7 @@ import PIL
 TEST_DATA_DIR = pathlib.Path.cwd() / "tests" / "data"
 
 
-@functools.lru_cache
+@functools.lru_cache(maxsize=1)
 def get_image(name):
     image_name = TEST_DATA_DIR / name
     image = PIL.Image.open(image_name)

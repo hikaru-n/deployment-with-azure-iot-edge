@@ -1,0 +1,17 @@
+{
+  "$schema-version": "0.0.1",
+  "description": "",
+  "image": {
+    "repository": "localhost:5000/samplemodule",
+    "tag": {
+      "version": "0.0.1",
+      "platforms": {
+        "arm64": "./docker/Dockerfile.amd64",
+        "arm64v8": "./docker/Dockerfile.arm64"
+      }
+    },
+    "buildOptions": [],
+    "contextPath": "./"
+  },
+  "language": "python"
+}

@@ -1,6 +1,8 @@
 import pytest
+import torch
 import torchvision.transforms as FT
-from src.models import Model
+
+from iotserving.models import Model
 
 from . import get_image
 
@@ -15,16 +17,21 @@ def _get_transformer():
 
 
 @pytest.fixture
-def _transformer():
+def transformer():
     return _get_transformer()
 
 
 @pytest.fixture
-def input(_transformer):
-    input = _transformer(get_image("cat.jpg"))
-    return input.unsqueeze(0).double()
+def input(transformer):
+    input = transformer(get_image("cat.jpg"))
+    return input.unsqueeze(0)
 
 
 @pytest.fixture
 def model():
     return Model("resnet18")
+
+
+@pytest.fixture
+def detaministic():
+    torch.manual_seed(0)

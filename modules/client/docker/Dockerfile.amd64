@@ -19,10 +19,10 @@ RUN apt-get -qq update \
         libtiff-dev \
         libopenjp2-7-dev \
         libavformat-dev \
+        libgl1-mesa-dev \
         libpq-dev
 
 WORKDIR /opt/build
-
 RUN pip install numpy \
     && wget -q https://github.com/opencv/opencv/archive/${OPENCV_VERSION}.zip -O opencv.zip \
     && unzip -qq opencv.zip -d /opt \
@@ -55,8 +55,8 @@ RUN pip install numpy \
 
 WORKDIR /app
 
-COPY . .
-
+COPY requirements.txt .
 RUN pip install -r requirements.txt
 
-# ENTRYPOINT [ "python" ]
+COPY . .
+RUN pip install -e .

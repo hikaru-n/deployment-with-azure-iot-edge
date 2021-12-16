@@ -57,8 +57,27 @@
             "status": "running",
             "restartPolicy": "always",
             "settings": {
-              "image": "",
-              "createOptions": {}
+              "image": "${MODULES.client}",
+              "createOptions": {
+                "HostConfig": {
+                  "Binds": ["/dev/video0:/dev/video0"],
+                  "Devices": [
+                    {
+                      "PathOnHost": "/dev/video0",
+                      "PathInContainer": "/dev/video0",
+                      "CgroupPermissions": "mrw"
+                    }
+                  ]
+                }
+              }
+            },
+            "env": {
+              "IOTHUB_CONNECTION_STRING": {
+                "value": "${IOTHUB_CONNECTION_STRING}"
+              },
+              "API_HOST": {
+                "value": "${API_HOST}"
+              }
             }
           },
           "serving": {
@@ -67,8 +86,12 @@
             "status": "running",
             "restartPolicy": "always",
             "settings": {
-              "image": "",
-              "createOptions": {}
+              "image": "${MODULES.serving}",
+              "createOptions": {
+                "HostConfig": {
+                  "Runtime": "nvidia"
+                }
+              }
             }
           }
         }
@@ -78,7 +101,7 @@
       "properties.desired": {
         "schemaVersion": "1.2",
         "routes": {
-          "SampleModuleToIoTHub": "FROM /messages/modules/client/outputs/* INTO $upstream"
+          "ServingToIoTHub": "FROM /messages/modules/client/outputs/* INTO $upstream"
         },
         "storeAndForwardConfiguration": {
           "timeToLiveSecs": 7200

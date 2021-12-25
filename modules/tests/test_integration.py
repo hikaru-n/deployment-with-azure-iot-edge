@@ -8,7 +8,7 @@ class _FakeVideoCapture:
         pass
 
     def read(self):
-        return get_image("cat.jpg")
+        return True, get_image("cat.jpg")
 
 
 def use_fake_camera_capture(mocker):

@@ -13,11 +13,11 @@ def not_found_web_camera():
 
 
 class _FakeVideoCapture:
-    def __init__(self, *args, **kwags):
+    def __init__(self, *args, **kwargs):
         pass
 
     def read(self):
-        return get_image("cat.jpg")
+        return True, get_image("cat.jpg")
 
 
 def use_fake_camera_capture(mocker):

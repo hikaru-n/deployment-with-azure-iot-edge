@@ -1,4 +1,4 @@
-from threading import Thread
+import time
 
 from azure.iot.device import IoTHubDeviceClient, Message
 
@@ -14,7 +14,11 @@ def _get_device_client():
     return IoTHubDeviceClient.create_from_connection_string(value)
 
 
-class IoTHub(Thread):
+def _warmup():
+    time.sleep(1)
+
+
+class IoTHub:
     def __init__(self, responses):
         super().__init__()
         self.responses = responses
@@ -34,7 +38,10 @@ class IoTHub(Thread):
 
     def run(self):
         while self._alive:
+            _warmup()
             try:
                 self._send()
             except EmptyMessage:
                 pass
+            except RuntimeError as e:
+                print(e)

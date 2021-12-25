@@ -1,12 +1,19 @@
 import os
+import time
 from threading import Thread
 
 import cv2
 
 
+def _warmup():
+    time.sleep(5)
+
+
 def _get_video_capture():
-    index = os.environ.get("CAMERA_INDEX", 0)
-    return cv2.VideoCapture(index)
+    index = int(os.environ.get("CAMERA_INDEX", 0))
+    capture = cv2.VideoCapture(index)
+    _warmup()
+    return capture
 
 
 class Camera(Thread):
@@ -21,8 +28,9 @@ class Camera(Thread):
         self._alive = False
 
     def _run(self):
-        image = self._impl.read()
-        self._images.put(image)
+        can_captured, image = self._impl.read()
+        if can_captured:
+            self._images.put(image)
 
     def run(self):
         while self._alive:

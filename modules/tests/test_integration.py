@@ -40,8 +40,8 @@ class TestIntegration:
         _nullify_device_client(mocker)
 
         client = Client()
-        client.run()
-        client.shutdown()
+        client.camera._run()
+        client.api._run()
 
         actual = client.iothub.responses.get()
         assert actual._value.get("Prediction") == 285

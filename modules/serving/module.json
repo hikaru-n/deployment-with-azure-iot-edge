@@ -1,12 +1,13 @@
 {
   "$schema-version": "0.0.1",
-  "description": "Provide iot client.",
+  "description": "Provide serving.",
   "image": {
-    "repository": "<ACR_NAME>.azurecr.io/iotclient",
+    "repository": "<ACR_NAME>.azurecr.io/iotserving",
     "tag": {
       "version": "0.0.1",
       "platforms": {
-        "arm64": "Dockerfile"
+        "arm64": "docker/Dockerfile.arm64",
+        "arm64v8": "docker/Dockerfile.amd64"
       }
     },
     "buildOptions": [],

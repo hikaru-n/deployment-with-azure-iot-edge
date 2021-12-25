@@ -6,6 +6,11 @@ services:
     build:
       context: modules/serving
       dockerfile: docker/Dockerfile.amd64
+    environment:
+      - PYTHONDONTWRITEBYTECODE=1
+      - FLASK_APP=entrypoints/app.py
+      - FLASK_DEBUG=1
+      - PYTHONUNBUFFERED=1
     image: iotserving
 
   api:
@@ -28,7 +33,7 @@ services:
   client:
     build:
       context: modules/client
-      dockerfile: docker/Dockerfile.amd64
+      dockerfile: Dockerfile
     volumes:
       - ./modules/tests:/app/tests
     environment:

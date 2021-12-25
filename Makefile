@@ -18,7 +18,7 @@ unit-test: client-test serving-test
 integration-test: up
 	docker-compose run --rm --no-deps --entrypoint=pytest client -s /app/tests
 
-test: unit-test integration-tests
+test: unit-test integration-test
 
 down:
 	docker-compose down --remove-orphans

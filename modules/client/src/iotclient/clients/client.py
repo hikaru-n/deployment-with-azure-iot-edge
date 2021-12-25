@@ -16,9 +16,8 @@ class Client:
     def run(self):
         self.camera.start()
         self.api.start()
-        self.iothub.start()
+        self.iothub.run()
 
     def shutdown(self):
         self.camera.kill()
         self.api.kill()
-        self.iothub.kill()

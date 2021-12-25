@@ -1,5 +1,6 @@
 from base64 import decodebytes
 
+import numpy as np
 import torch
 
 
@@ -11,7 +12,8 @@ class Input:
     def from_post_parameter(cls, param):
         data = param.get("image")
         data = decodebytes(data.encode("utf-8"))
-        data = torch.frombuffer(data, dtype=torch.uint8)
+        data = np.frombuffer(data, dtype=np.uint8)
+        data = torch.from_numpy(data)
         shape = param.get("shape")
         data = data.reshape(shape)
         data = data.permute(2, 0, 1)

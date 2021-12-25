@@ -34,8 +34,13 @@ services:
     build:
       context: modules/client
       dockerfile: Dockerfile
-    volumes:
-      - ./modules/tests:/app/tests
+    image: iotclient
+
+  integration:
+    depends_on:
+      - client
     environment:
       - API_HOST=api
+    volumes:
+      - ./modules/tests:/app/tests
     image: iotclient

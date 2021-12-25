@@ -1,5 +1,7 @@
 # Azure IoT Edge を使用したモデルのデプロイ
 
+(ドキュメント作成中です。)
+
 このリポジトリは、[Azure IoT Edge](https://docs.microsoft.com/ja-jp/azure/iot-edge/about-iot-edge?view=iotedge-2020-11) を使用して Jetson にモデルをリモートでデプロイした際の作業記録です。
 
 趣味の領域で簡単に試みたため、拙い箇所等ございますがご容赦ください。

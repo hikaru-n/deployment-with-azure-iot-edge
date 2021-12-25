@@ -9,7 +9,18 @@
           "settings": {
             "minDockerVersion": "v1.25",
             "loggingOptions": "",
-            "registryCredentials": {}
+            "registryCredentials": {
+              "docker": {
+                "username": "<ACR_NAME>",
+                "password": "<ACR_PASSWORD>",
+                "address": "docker.io"
+              },
+              "<ACR_NAME>": {
+                "username": "<ACR_NAME>",
+                "password": "<ACR_PASSWORD>",
+                "address": "<ACR_NAME>.azurecr.io"
+              }
+            }
           }
         },
         "systemModules": {
@@ -60,23 +71,29 @@
               "image": "${MODULES.client}",
               "createOptions": {
                 "HostConfig": {
-                  "Binds": ["/dev/video0:/dev/video0"],
+                  "Binds": [
+                    "/dev/video${CAMERA_INDEX}:/dev/video${CAMERA_INDEX}"
+                  ],
                   "Devices": [
                     {
-                      "PathOnHost": "/dev/video0",
-                      "PathInContainer": "/dev/video0",
+                      "PathOnHost": "/dev/video${CAMERA_INDEX}",
+                      "PathInContainer": "/dev/video${CAMERA_INDEX}",
                       "CgroupPermissions": "mrw"
                     }
                   ]
-                }
+                },
+                "Entrypoint": ["python3", "main.py"]
               }
             },
             "env": {
-              "IOTHUB_CONNECTION_STRING": {
-                "value": "${IOTHUB_CONNECTION_STRING}"
+              "CONNECTION_STRING": {
+                "value": "${CONNECTION_STRING}"
               },
               "API_HOST": {
                 "value": "${API_HOST}"
+              },
+              "CAMERA_INDEX": {
+                "value": "${CAMERA_INDEX}"
               }
             }
           },
@@ -88,9 +105,26 @@
             "settings": {
               "image": "${MODULES.serving}",
               "createOptions": {
+                "Hostname": "${API_HOST}",
+                "Domainname": "${API_HOST}",
+                "Entrypoint": ["flask", "run", "--host=0.0.0.0", "--port=80"],
                 "HostConfig": {
                   "Runtime": "nvidia"
                 }
+              }
+            },
+            "env": {
+              "PYTHONDONTWRITEBYTECODE": {
+                "value": "1"
+              },
+              "FLASK_APP": {
+                "value": "entrypoints/app.py"
+              },
+              "LC_ALL": {
+                "value": "C.UTF-8"
+              },
+              "LANG": {
+                "value": "C.UTF-8"
               }
             }
           }
@@ -99,7 +133,7 @@
     },
     "$edgeHub": {
       "properties.desired": {
-        "schemaVersion": "1.2",
+        "schemaVersion": "1.1",
         "routes": {
           "ServingToIoTHub": "FROM /messages/modules/client/outputs/* INTO $upstream"
         },

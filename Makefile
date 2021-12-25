@@ -4,19 +4,19 @@ export DOCKER_BUILDKIT=1
 build:
 	docker-compose build
 
-up:
+up: build
 	docker-compose up -d
 
-client-test:
-	docker-compose run --rm --no-deps --entrypoint=pytest client tests
+client-test: up
+	docker-compose run --rm --no-deps --entrypoint=pytest client -s tests
 
-serving-test:
-	docker-compose run --rm --no-deps --entrypoint=pytest serving tests
+serving-test: up
+	docker-compose run --rm --no-deps --entrypoint=pytest serving -s tests
 
 unit-test: client-test serving-test
 
 integration-test: up
-	docker-compose run --rm --no-deps --entrypoint=pytest client -s /app/tests
+	docker-compose run --rm --no-deps --entrypoint=pytest integration -s tests
 
 test: unit-test integration-test
 
